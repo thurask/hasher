@@ -4,11 +4,11 @@ import sys
 
 workingdir = os.getcwd() #replace this in your code
 
-def hash(filepath):
+def shahash(filepath, blocksize=16*1024*1024): #don't read all of a huge file
     sha1 = hashlib.sha1()
     f = open(filepath, 'rb')
     try:
-        sha1.update(f.read())
+        sha1.update(f.read(blocksize))
     finally:
         f.close()
     return sha1.hexdigest()
@@ -21,7 +21,7 @@ for file in os.listdir(workingdir):
     elif file.endswith(".cksum") and file.startswith("sha1"):
         pass #exclude already generated files
     else:
-        result = hash(os.path.join(workingdir, file))
+        result = shahash(os.path.join(workingdir, file), 16*1024*1024)
         hashoutput+=str(result)
         hashoutput+=" "
         hashoutput+=str(file)
